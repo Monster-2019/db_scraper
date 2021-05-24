@@ -2,6 +2,7 @@ import * as fetch from 'node-fetch'
 import * as cheerio from 'cheerio'
 import * as fs from 'fs'
 import * as moment from 'moment'
+import * as winston from 'winston'
 
 const cookie =
 	'bid=r6AMO-KhxSo; ll="108296"; _vwo_uuid_v2=D3572A8AB59251553189B8277AD441639|0e2829af1c231bedd23d9bdb31dea0f7; douban-fav-remind=1; viewed="25786138"; gr_user_id=033c8361-47a4-4570-8375-7b77e2ea286e; push_noty_num=0; push_doumail_num=0; dbcl2="205676588:3RTsWFhd5aw"; __utmv=30149280.20567; ck=OjhJ; __utmc=30149280; __utmc=223695111; ct=y; _pk_ref.100001.4cf6=["","",1621584160,"https://www.google.com.hk/"]; _pk_id.100001.4cf6=4ba64db73377db49.1619692183.5.1621584160.1621576992.; _pk_ses.100001.4cf6=*; __utma=30149280.1388461121.1619692184.1621576980.1621584160.18; __utmb=30149280.0.10.1621584160; __utmz=30149280.1621584160.18.13.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not provided); __utma=223695111.348488458.1619692184.1621576980.1621584160.5; __utmb=223695111.0.10.1621584160; __utmz=223695111.1621584160.5.5.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not provided)'
@@ -14,6 +15,13 @@ const options = {
 		Cookie: cookie,
 	},
 }
+
+const logger = winston.createLogger({
+	transports: [
+		new winston.transports.Console(),
+		new winston.transports.File({ filename: 'info.log' }),
+	],
+})
 
 const baseUrl = 'https://www.douban.com/group/changningzufan/discussion?start='
 const currentDate = moment().format('MM-DD')
@@ -39,27 +47,51 @@ const getTopicLink = (html) => {
 	return end
 }
 
+const crawlTopic = async (urlList) => {
+	for (let url of urlList) {
+		const response = await fetch(url, options)
+		const html = await response.text()
+
+		let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
+
+		fs.writeFile(`topic/${fileName}`, html, function (err) {
+			if (!err) {
+				console.log(`文件${fileName}保存成功!`)
+			} else {
+				console.log(err)
+			}
+		})
+
+		let s = Math.round(Math.random() * (8 - 3)) + 3
+		console.log(`等待${s}秒后继续`)
+		await new Promise((r) => setTimeout(r, s * 1000))
+	}
+}
+
 const crawl = async (url) => {
 	const response = await fetch(url, options)
 	const html = await response.text()
+	logger.info(`${url}完成`)
 
 	let isEnd = getTopicLink(html)
 	if (!isEnd) {
-		let s = (Math.round(Math.random() * (10 - 5)) + 5)
+		let s = (Math.round(Math.random() * (8 - 3)) + 3)
 		console.log(`等待${s}秒后继续`)
 		await new Promise(r => setTimeout(r, s * 1000))
 		start += 25
 		crawl(`${baseUrl}${start}`)
 	} else {
-		console.log(topicList)
+		// console.log(topicList)
 		console.log(`已获取当天所有数据`)
+		crawlTopic(topicList)
 		return 0
 	}
 }
 
 crawl(`${baseUrl}${start}`)
+// crawlTopic(['https://www.douban.com/group/topic/227034203/'])
 
-// fs.writeFile('index.html', html, function(err) {
+	// fs.writeFile('index.html', html, function(err) {
 	// 	if (err) {
 	// 		console.log('1')
 	// 	} else {
@@ -67,10 +99,58 @@ crawl(`${baseUrl}${start}`)
 	// 	}
 	// })
 
-// images.forEach(imgUrl => {
+	// images.forEach(imgUrl => {
 	// 	fetch(imgUrl, options).then(res => {
 	// 		const filename = path.basename(imgUrl)
 	// 		const dest = fs.createWriteStream(`images/${filename}`)
 	// 		res.body.pipe(dest)
 	// 	})
 	// })
+
+// [
+// 	'https://www.douban.com/group/topic/227429843/',
+// 	'https://www.douban.com/group/topic/224224965/',
+// 	'https://www.douban.com/group/topic/227368201/',
+// 	'https://www.douban.com/group/topic/227428619/',
+// 	'https://www.douban.com/group/topic/226859850/',
+// 	'https://www.douban.com/group/topic/226572727/',
+// 	'https://www.douban.com/group/topic/227163332/',
+// 	'https://www.douban.com/group/topic/227160393/',
+// 	'https://www.douban.com/group/topic/227426788/',
+// 	'https://www.douban.com/group/topic/227426622/',
+// 	'https://www.douban.com/group/topic/226856032/',
+// 	'https://www.douban.com/group/topic/227426239/',
+// 	'https://www.douban.com/group/topic/227337632/',
+// 	'https://www.douban.com/group/topic/227383648/',
+// 	'https://www.douban.com/group/topic/226017897/',
+// 	'https://www.douban.com/group/topic/220796322/',
+// 	'https://www.douban.com/group/topic/226319901/',
+// 	'https://www.douban.com/group/topic/227420547/',
+// 	'https://www.douban.com/group/topic/227415478/',
+// 	'https://www.douban.com/group/topic/227325829/',
+// 	'https://www.douban.com/group/topic/227389731/',
+// 	'https://www.douban.com/group/topic/227405581/',
+// 	'https://www.douban.com/group/topic/227378773/',
+// 	'https://www.douban.com/group/topic/224510061/',
+// 	'https://www.douban.com/group/topic/227256732/',
+// 	'https://www.douban.com/group/topic/225293857/',
+// 	'https://www.douban.com/group/topic/225701409/',
+// 	'https://www.douban.com/group/topic/226604204/',
+// 	'https://www.douban.com/group/topic/225773954/',
+// 	'https://www.douban.com/group/topic/227402105/',
+// 	'https://www.douban.com/group/topic/225293857/',
+// 	'https://www.douban.com/group/topic/225701409/',
+// 	'https://www.douban.com/group/topic/226604204/',
+// 	'https://www.douban.com/group/topic/225773954/',
+// 	'https://www.douban.com/group/topic/227402105/',
+// 	'https://www.douban.com/group/topic/226071935/',
+// 	'https://www.douban.com/group/topic/226860630/',
+// 	'https://www.douban.com/group/topic/225726209/',
+// 	'https://www.douban.com/group/topic/226977556/',
+// 	'https://www.douban.com/group/topic/226871179/',
+// 	'https://www.douban.com/group/topic/227224194/',
+// 	'https://www.douban.com/group/topic/226480550/',
+// 	'https://www.douban.com/group/topic/225358780/',
+// 	'https://www.douban.com/group/topic/227034203/',
+// 	'https://www.douban.com/group/topic/158161818/'
+// ]
