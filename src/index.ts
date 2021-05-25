@@ -27,6 +27,7 @@ const baseUrl = 'https://www.douban.com/group/changningzufan/discussion?start='
 const currentDate = moment().format('MM-DD')
 let start = 0
 let topicList = []
+console.time('执行时间')
 
 const getTopicLink = (html) => {
 	let end = false
@@ -38,9 +39,11 @@ const getTopicLink = (html) => {
 			// console.log(today)
 			if (!today) end = true
 			return today
-		}).map((i, el) => {
+		})
+		.map((i, el) => {
 			return $(el).prevAll('.title').children('a').attr('href')
-		}).get()
+		})
+		.get()
 
 	topicList.push(...topic)
 
@@ -66,6 +69,7 @@ const crawlTopic = async (urlList) => {
 		console.log(`等待${s}秒后继续`)
 		await new Promise((r) => setTimeout(r, s * 1000))
 	}
+	console.timeEnd('执行时间')
 }
 
 const crawl = async (url) => {
@@ -75,9 +79,9 @@ const crawl = async (url) => {
 
 	let isEnd = getTopicLink(html)
 	if (!isEnd) {
-		let s = (Math.round(Math.random() * (8 - 3)) + 3)
+		let s = Math.round(Math.random() * (8 - 3)) + 3
 		console.log(`等待${s}秒后继续`)
-		await new Promise(r => setTimeout(r, s * 1000))
+		await new Promise((r) => setTimeout(r, s * 1000))
 		start += 25
 		crawl(`${baseUrl}${start}`)
 	} else {
@@ -91,66 +95,18 @@ const crawl = async (url) => {
 crawl(`${baseUrl}${start}`)
 // crawlTopic(['https://www.douban.com/group/topic/227034203/'])
 
-	// fs.writeFile('index.html', html, function(err) {
-	// 	if (err) {
-	// 		console.log('1')
-	// 	} else {
-	// 		console.log('2')
-	// 	}
-	// })
+// fs.writeFile('index.html', html, function(err) {
+// 	if (err) {
+// 		console.log('1')
+// 	} else {
+// 		console.log('2')
+// 	}
+// })
 
-	// images.forEach(imgUrl => {
-	// 	fetch(imgUrl, options).then(res => {
-	// 		const filename = path.basename(imgUrl)
-	// 		const dest = fs.createWriteStream(`images/${filename}`)
-	// 		res.body.pipe(dest)
-	// 	})
-	// })
-
-// [
-// 	'https://www.douban.com/group/topic/227429843/',
-// 	'https://www.douban.com/group/topic/224224965/',
-// 	'https://www.douban.com/group/topic/227368201/',
-// 	'https://www.douban.com/group/topic/227428619/',
-// 	'https://www.douban.com/group/topic/226859850/',
-// 	'https://www.douban.com/group/topic/226572727/',
-// 	'https://www.douban.com/group/topic/227163332/',
-// 	'https://www.douban.com/group/topic/227160393/',
-// 	'https://www.douban.com/group/topic/227426788/',
-// 	'https://www.douban.com/group/topic/227426622/',
-// 	'https://www.douban.com/group/topic/226856032/',
-// 	'https://www.douban.com/group/topic/227426239/',
-// 	'https://www.douban.com/group/topic/227337632/',
-// 	'https://www.douban.com/group/topic/227383648/',
-// 	'https://www.douban.com/group/topic/226017897/',
-// 	'https://www.douban.com/group/topic/220796322/',
-// 	'https://www.douban.com/group/topic/226319901/',
-// 	'https://www.douban.com/group/topic/227420547/',
-// 	'https://www.douban.com/group/topic/227415478/',
-// 	'https://www.douban.com/group/topic/227325829/',
-// 	'https://www.douban.com/group/topic/227389731/',
-// 	'https://www.douban.com/group/topic/227405581/',
-// 	'https://www.douban.com/group/topic/227378773/',
-// 	'https://www.douban.com/group/topic/224510061/',
-// 	'https://www.douban.com/group/topic/227256732/',
-// 	'https://www.douban.com/group/topic/225293857/',
-// 	'https://www.douban.com/group/topic/225701409/',
-// 	'https://www.douban.com/group/topic/226604204/',
-// 	'https://www.douban.com/group/topic/225773954/',
-// 	'https://www.douban.com/group/topic/227402105/',
-// 	'https://www.douban.com/group/topic/225293857/',
-// 	'https://www.douban.com/group/topic/225701409/',
-// 	'https://www.douban.com/group/topic/226604204/',
-// 	'https://www.douban.com/group/topic/225773954/',
-// 	'https://www.douban.com/group/topic/227402105/',
-// 	'https://www.douban.com/group/topic/226071935/',
-// 	'https://www.douban.com/group/topic/226860630/',
-// 	'https://www.douban.com/group/topic/225726209/',
-// 	'https://www.douban.com/group/topic/226977556/',
-// 	'https://www.douban.com/group/topic/226871179/',
-// 	'https://www.douban.com/group/topic/227224194/',
-// 	'https://www.douban.com/group/topic/226480550/',
-// 	'https://www.douban.com/group/topic/225358780/',
-// 	'https://www.douban.com/group/topic/227034203/',
-// 	'https://www.douban.com/group/topic/158161818/'
-// ]
+// images.forEach(imgUrl => {
+// 	fetch(imgUrl, options).then(res => {
+// 		const filename = path.basename(imgUrl)
+// 		const dest = fs.createWriteStream(`images/${filename}`)
+// 		res.body.pipe(dest)
+// 	})
+// })
