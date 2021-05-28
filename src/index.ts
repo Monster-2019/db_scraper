@@ -23,9 +23,14 @@ const logger = winston.createLogger({
 	],
 })
 
-const baseUrl = 'https://www.douban.com/group/changningzufan/discussion?start='
+// const baseUrl = 'https://www.douban.com/group/changningzufan/discussion?start='
+const groupUrls = [
+	'https://www.douban.com/group/zufan/',
+	'https://www.douban.com/group/changningzufan/',
+	// 'https://www.douban.com/group/467799/',
+	// 'https://www.douban.com/group/shanghaizufang/',
+]
 const currentDate = moment().format('MM-DD')
-let start = 0
 let topicList = []
 console.time('执行时间')
 
@@ -65,34 +70,54 @@ const crawlTopic = async (urlList) => {
 			}
 		})
 
-		let s = Math.round(Math.random() * (8 - 3)) + 3
+		let s = Math.round(Math.random() * (4 - 2)) + 2
 		console.log(`等待${s}秒后继续`)
-		await new Promise((r) => setTimeout(r, s * 1000))
+		await new Promise((r) => setTimeout(r, s * 100))
 	}
 	console.timeEnd('执行时间')
 }
 
-const crawl = async (url) => {
-	const response = await fetch(url, options)
+const crawl = async (url, start) => {
+	let api = url + 'discussion?start='
+	const response = await fetch(api + start, options)
 	const html = await response.text()
-	logger.info(`${url}完成`)
+	logger.info(`${api + start}完成`)
 
 	let isEnd = getTopicLink(html)
 	if (!isEnd) {
-		let s = Math.round(Math.random() * (8 - 3)) + 3
+		let s = Math.round(Math.random() * (4 - 2)) + 2
 		console.log(`等待${s}秒后继续`)
-		await new Promise((r) => setTimeout(r, s * 1000))
+		await new Promise((r) => setTimeout(r, s * 100))
 		start += 25
-		crawl(`${baseUrl}${start}`)
+		await crawl(url, start)
 	} else {
 		// console.log(topicList)
-		console.log(`已获取当天所有数据`)
-		crawlTopic(topicList)
 		return 0
 	}
 }
 
-crawl(`${baseUrl}${start}`)
+const crawlList = async () => {
+	for (let url of groupUrls) {
+		await crawl(url, 0)
+		console.log(1)
+	}
+	console.log(`已获取当天所有数据`)
+	crawlTopic(topicList)
+}
+
+const clearDir = async () => {
+	fs.readdirSync('topic').map((file) => {
+		fs.unlink(`topic/${file}`, (err) => {
+			if (err) {
+				console.log(err)
+			}
+		})
+	})
+	console.log('delete ok')
+}
+
+clearDir()
+crawlList()
 // crawlTopic(['https://www.douban.com/group/topic/227034203/'])
 
 // fs.writeFile('index.html', html, function(err) {
