@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node src/test.ts",
-    "deal": "ts-node src/deal.ts",
-    "start": "ts-node src/index.ts"
+    "test": "node src/proxyList.js",
+    "deal": "node src/deal.js",
+    "start": "node src/index.js"
   },
   "author": "dongxin",
   "license": "ISC",
   "dependencies": {
+    "@types/http-proxy-agent": "^4.0.1",
     "@types/node": "^15.3.1",
     "cheerio": "^1.0.0-rc.9",
+    "https-proxy-agent": "^5.0.0",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "ts-node": "^9.1.1",

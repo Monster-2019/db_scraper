@@ -1,8 +1,10 @@
-import * as fetch from 'node-fetch'
-import * as cheerio from 'cheerio'
-import * as fs from 'fs'
-import * as moment from 'moment'
-import * as winston from 'winston'
+const fetch = require('node-fetch')
+const cheerio = require('cheerio')
+const fs = require('fs')
+const moment = require('moment')
+const winston = require('winston')
+const HttpsProxyAgent = require('https-proxy-agent')
+const getProxyList = require('./proxyList')
 
 const cookie =
 	'bid=r6AMO-KhxSo; ll="108296"; _vwo_uuid_v2=D3572A8AB59251553189B8277AD441639|0e2829af1c231bedd23d9bdb31dea0f7; douban-fav-remind=1; viewed="25786138"; gr_user_id=033c8361-47a4-4570-8375-7b77e2ea286e; push_noty_num=0; push_doumail_num=0; dbcl2="205676588:3RTsWFhd5aw"; __utmv=30149280.20567; ck=OjhJ; __utmc=30149280; __utmc=223695111; ct=y; _pk_ref.100001.4cf6=["","",1621584160,"https://www.google.com.hk/"]; _pk_id.100001.4cf6=4ba64db73377db49.1619692183.5.1621584160.1621576992.; _pk_ses.100001.4cf6=*; __utma=30149280.1388461121.1619692184.1621576980.1621584160.18; __utmb=30149280.0.10.1621584160; __utmz=30149280.1621584160.18.13.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not provided); __utma=223695111.348488458.1619692184.1621576980.1621584160.5; __utmb=223695111.0.10.1621584160; __utmz=223695111.1621584160.5.5.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not provided)'
@@ -25,13 +27,16 @@ const logger = winston.createLogger({
 
 // const baseUrl = 'https://www.douban.com/group/changningzufan/discussion?start='
 const groupUrls = [
-	'https://www.douban.com/group/zufan/',
 	'https://www.douban.com/group/changningzufan/',
+	'https://www.douban.com/group/zufan/',
 	// 'https://www.douban.com/group/467799/',
 	// 'https://www.douban.com/group/shanghaizufang/',
 ]
 const currentDate = moment().format('MM-DD')
 let topicList = []
+let proxyList = []
+let proxyIndex = 0
+let curProxy = {}
 console.time('执行时间')
 
 const getTopicLink = (html) => {
@@ -57,7 +62,14 @@ const getTopicLink = (html) => {
 
 const crawlTopic = async (urlList) => {
 	for (let url of urlList) {
-		const response = await fetch(url, options)
+		// curProxy = proxyList[proxyIndex++]
+		// if (proxyIndex === proxyList.length) proxyIndex = 0
+		// let proxy = `${curProxy.protocol}://${curProxy.ip}:${curProxy.port}`
+		// const proxyAgent = new HttpsProxyAgent(proxy);
+		const response = await fetch(url, {
+			...options,
+			// agent: proxyAgent
+		})
 		const html = await response.text()
 
 		let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
@@ -79,7 +91,15 @@ const crawlTopic = async (urlList) => {
 
 const crawl = async (url, start) => {
 	let api = url + 'discussion?start='
-	const response = await fetch(api + start, options)
+	// curProxy = proxyList[proxyIndex++]
+	// if (proxyIndex === proxyList.length) proxyIndex = 0
+	// let proxy = `${curProxy.protocol}://${curProxy.ip}:${curProxy.port}`
+	// const proxyAgent = new HttpsProxyAgent(proxy);
+	const response = await fetch(api + start, {
+		...options,
+		// agent: proxyAgent
+	})
+	console.log(response.ok)
 	const html = await response.text()
 	logger.info(`${api + start}完成`)
 
@@ -99,7 +119,6 @@ const crawl = async (url, start) => {
 const crawlList = async () => {
 	for (let url of groupUrls) {
 		await crawl(url, 0)
-		console.log(1)
 	}
 	console.log(`已获取当天所有数据`)
 	crawlTopic(topicList)
@@ -116,8 +135,14 @@ const clearDir = async () => {
 	console.log('delete ok')
 }
 
-clearDir()
-crawlList()
+getProxyList()
+	.then(res => {
+		proxyList = res
+		// console.log(proxyList)
+		clearDir()
+		crawlList()
+	})
+
 // crawlTopic(['https://www.douban.com/group/topic/227034203/'])
 
 // fs.writeFile('index.html', html, function(err) {
