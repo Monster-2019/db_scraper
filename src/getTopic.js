@@ -1,9 +1,10 @@
 const moment = require('moment')
 const logger = require('./logger')
-const HttpsProxyAgent = require('https-proxy-agent')
+// const HttpsProxyAgent = require('https-proxy-agent')
 const fs = require('fs')
 const cheerio = require('cheerio')
 const fetch = require('node-fetch')
+const dealData = require('./deal')
 
 const cookie = 'll="108296"; bid=x9Ph-lhwpbY; push_noty_num=0; push_doumail_num=0; douban-fav-remind=1; _ga=GA1.2.632792398.1621586045; gr_user_id=8929f845-1b4b-4147-aca9-1d6bbca5dc1d; ct=y; dbcl2="238471146:VoHrDLUNdz0"; __utmv=30149280.23847; ck=0lcn; __utmc=30149280; __utmz=30149280.1622517596.15.10.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not provided); _pk_ref.100001.8cb4=["","",1622530377,"https://www.google.com/"]; _pk_ses.100001.8cb4=*; __utma=30149280.632792398.1621586045.1622527024.1622530377.18; __utmt=1; _pk_id.100001.8cb4=296170f7976dd179.1621586044.16.1622530910.1622527166.; __utmb=30149280.30.8.1622530883699'
 const options = {
@@ -21,15 +22,15 @@ const currentUnix = moment(moment().format('YYYY-MM-DD HH:mm')).format('x')
 
 const groupUrls = [
   'https://www.douban.com/group/changningzufan/',
-  'https://www.douban.com/group/zufan/',
+  // 'https://www.douban.com/group/zufan/',
   // 'https://www.douban.com/group/467799/',
   // 'https://www.douban.com/group/shanghaizufang/',
 ]
 
 let topicList = []
-let proxyList = []
-let proxyIndex = 0
-let curProxy = {}
+// let proxyList = []
+// let proxyIndex = 0
+// let curProxy = {}
 
 const getTopicLink = (html) => {
   let end = false
@@ -54,6 +55,7 @@ const getTopicLink = (html) => {
 }
 
 const crawlTopic = async (urlList) => {
+  const list = []
   for (let url of urlList) {
     // curProxy = proxyList[proxyIndex++]
     // if (proxyIndex === proxyList.length) proxyIndex = 0
@@ -69,16 +71,20 @@ const crawlTopic = async (urlList) => {
     let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
     let s = Math.round(Math.random() * (6 - 3)) + 3
 
-    fs.writeFile(`topic/${fileName}`, html, function (err) {
-      if (!err) {
-        console.log(`文件${fileName}保存成功!等待${s}秒后继续`)
-      } else {
-        console.log(err)
-      }
-    })
+    list.push(html)
+
+    // fs.writeFile(`topic/${fileName}`, html, function (err) {
+    //   if (!err) {
+    console.log(`文件${fileName}获取成功!等待${s}秒后继续`)
+    //   } else {
+    //     console.log(err)
+    //   }
+    // })
 
     await new Promise((r) => setTimeout(r, s * 1000))
   }
+  console.log(1, list)
+  return list
 }
 
 const crawl = async (url, start) => {
@@ -112,7 +118,10 @@ const crawlList = async () => {
   }
   logger.info(`数据获取完成`)
   crawlTopic(topicList)
-    .then(() => {
-      dealData()
+    .then(res => {
+      console.log(2, res)
+      dealData(res)
     })
 }
+
+module.exports = crawlList

@@ -1,9 +1,8 @@
 const fs = require('fs')
-const getProxyList = require('./proxyList')
-const dealData = require('./deal')
-const schedule = require('node-schedule')
-const logger = require('./logger')
 const mongoose = require('mongoose')
+const getProxyList = require('./proxyList')
+const schedule = require('node-schedule')
+const getTopic = require('./getTopic')
 
 const url = 'mongodb://dbAdmin:dd123456@121.199.51.37:27017/douban'
 
@@ -17,14 +16,16 @@ mongoose.connection.once('error', err => {
 
 const start = async () => {
 	console.time('执行时间')
-	await getProxyList()
-		.then(res => {
-			proxyList = res
-			clearDir()
-			crawlList()
-		})
+	// await getProxyList()
+	// .then(res => {
+	// proxyList = res
+	// await clearDir()
+	await getTopic()
+	// })
 	console.timeEnd('执行时间')
 }
+
+start()
 
 // schedule.scheduleJob('* * 1 * * *', () => {
 // 	start()

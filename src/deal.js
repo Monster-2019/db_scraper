@@ -5,7 +5,8 @@ const path = require('path')
 
 const result = []
 
-const dealDir = () => {
+const dealDir = (res) => {
+	console.log(3, res)
 	fs.readdir(path.join(__dirname, '../topic'), async function (err, files) {
 		console.time('数据处理时间')
 		if (err) {
