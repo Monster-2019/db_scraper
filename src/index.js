@@ -27,11 +27,9 @@ const start = async () => {
 
 start()
 
-// schedule.scheduleJob('* * 1 * * *', () => {
+// schedule.scheduleJob('0 10 * * * *', () => {
 // 	start()
 // })
-
-// start()
 
 // const clearDir = async () => {
 // 	fs.readdirSync('topic').map((file) => {

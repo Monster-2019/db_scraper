@@ -21,7 +21,8 @@ const currentDate = moment().format('MM-DD')
 const currentUnix = moment(moment().format('YYYY-MM-DD HH:mm')).format('x')
 
 const groupUrls = [
-  'https://www.douban.com/group/changningzufan/',
+  "https://www.douban.com/group/"
+  // 'https://www.douban.com/group/changningzufan/',
   // 'https://www.douban.com/group/zufan/',
   // 'https://www.douban.com/group/467799/',
   // 'https://www.douban.com/group/shanghaizufang/',
@@ -35,15 +36,16 @@ let topicList = []
 const getTopicLink = (html) => {
   let end = false
   const $ = cheerio.load(html)
-  const topic = $('td[class=time]', '.olt')
+  const topic = $('td[class=td-time]', '.olt')
     .filter((i, el) => {
-      console.log(currentUnix, moment(currentYear + '-' + $(el).text()).format('x'))
-      let today = currentUnix - moment(currentYear + '-' + $(el).text()).format('x') < 3600000
+      // let today = currentUnix - moment(currentYear + '-' + $(el).text()).format('x') < 3600000
+      let today = $(el).text().match(/^\d{1,2}(分钟|秒)前$/g)
       if (!today) end = true
       return today
     })
     .map((i, el) => {
-      return $(el).prevAll('.title').children('a').attr('href')
+      // return $(el).prevAll('.title').children('a').attr('href')
+      return $(el).prevAll('.td-subject').children('a').attr('href')
     })
     .get()
 
@@ -68,14 +70,15 @@ const crawlTopic = async (urlList) => {
     if (!response.ok) return 0
     const html = await response.text()
 
-    let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
-    let s = Math.round(Math.random() * (6 - 3)) + 3
+    // let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
+    let s = Math.round(Math.random() * (2 - 1)) + 1
 
     list.push(html)
 
     // fs.writeFile(`topic/${fileName}`, html, function (err) {
     //   if (!err) {
-    console.log(`文件${fileName}获取成功!等待${s}秒后继续`)
+    // console.log(`文件${fileName}获取成功!等待${s}秒后继续`)
+    console.log(`文章${url}完!等待${s}秒`)
     //   } else {
     //     console.log(err)
     //   }
@@ -83,12 +86,12 @@ const crawlTopic = async (urlList) => {
 
     await new Promise((r) => setTimeout(r, s * 1000))
   }
-  console.log(1, list)
   return list
 }
 
 const crawl = async (url, start) => {
-  let api = url + 'discussion?start='
+  // let api = url + 'discussion?start='
+  let api = url + '?start='
   // curProxy = proxyList[proxyIndex++]
   // if (proxyIndex === proxyList.length) proxyIndex = 0
   // let proxy = `${curProxy.protocol}://${curProxy.ip}:${curProxy.port}`
@@ -99,13 +102,15 @@ const crawl = async (url, start) => {
   })
   if (!response.ok) return 0
   const html = await response.text()
-  let s = Math.round(Math.random() * (6 - 3)) + 3
+  let s = Math.round(Math.random() * (2 - 1)) + 1
   console.log(`${api + start}完成，等待${s}秒后继续`)
 
   let isEnd = getTopicLink(html)
-  if (!isEnd) {
+  console.log(isEnd, start)
+  if (!isEnd || start === 0) {
     await new Promise((r) => setTimeout(r, s * 1000))
-    start += 25
+    // start += 25
+    start += 50
     await crawl(url, start)
   } else {
     return 0
@@ -119,7 +124,6 @@ const crawlList = async () => {
   logger.info(`数据获取完成`)
   crawlTopic(topicList)
     .then(res => {
-      console.log(2, res)
       dealData(res)
     })
 }
