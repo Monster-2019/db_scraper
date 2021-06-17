@@ -21,11 +21,12 @@ const currentDate = moment().format('MM-DD')
 const currentUnix = moment(moment().format('YYYY-MM-DD HH:mm')).format('x')
 
 const groupUrls = [
-  "https://www.douban.com/group/"
-  // 'https://www.douban.com/group/changningzufan/',
-  // 'https://www.douban.com/group/zufan/',
-  // 'https://www.douban.com/group/467799/',
-  // 'https://www.douban.com/group/shanghaizufang/',
+  // "https://www.douban.com/group/709827/discussion"
+  // "https://www.douban.com/group/"
+  'https://www.douban.com/group/changningzufan/discussion',
+  'https://www.douban.com/group/zufan/discussion',
+  'https://www.douban.com/group/467799/discussion',
+  // 'https://www.douban.com/group/shanghaizufang/discussion',
 ]
 
 let topicList = []
@@ -36,16 +37,16 @@ let topicList = []
 const getTopicLink = (html) => {
   let end = false
   const $ = cheerio.load(html)
-  const topic = $('td[class=td-time]', '.olt')
+  const topic = $('td[class=time]', '.olt')
     .filter((i, el) => {
-      // let today = currentUnix - moment(currentYear + '-' + $(el).text()).format('x') < 3600000
-      let today = $(el).text().match(/^\d{1,2}(分钟|秒)前$/g)
+      let today = currentUnix - moment(currentYear + '-' + $(el).text()).format('x') < 3600000
+      // let today = $(el).text().match(/^\d{1,2}(分钟|秒)前$/g)
       if (!today) end = true
       return today
     })
     .map((i, el) => {
-      // return $(el).prevAll('.title').children('a').attr('href')
-      return $(el).prevAll('.td-subject').children('a').attr('href')
+      return $(el).prevAll('.title').children('a').attr('href')
+      // return $(el).prevAll('.td-subject').children('a').attr('href')
     })
     .get()
 
@@ -67,7 +68,7 @@ const crawlTopic = async (urlList) => {
       ...options,
       // agent: proxyAgent
     })
-    if (!response.ok) return 0
+    if (!response.ok) return list
     const html = await response.text()
 
     // let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
@@ -107,10 +108,11 @@ const crawl = async (url, start) => {
 
   let isEnd = getTopicLink(html)
   console.log(isEnd, start)
-  if (!isEnd || start === 0) {
+  // if (!isEnd || start === 0) {
+  if (!isEnd) {
     await new Promise((r) => setTimeout(r, s * 1000))
-    // start += 25
-    start += 50
+    start += 25
+    // start += 50
     await crawl(url, start)
   } else {
     return 0

@@ -33,7 +33,7 @@ const dealDir = async (res) => {
 				new Set(content.match(/\b\d{4}(元|\/月)?\b/g))
 			).filter((item) => item !== time.slice(0, 4))
 			const phone = Array.from(new Set(content.match(/\b1\d{10}\b/g)))
-			const url = Array.from(new Set(content.match(/https:\/\/www.douban.com\/group\/topic\/\d{9}/g)))
+			const url = Array.from(new Set($.html().match(/https:\/\/www.douban.com\/group\/topic\/\d{9}/)))[0]
 
 			result.push({
 				time,
@@ -43,7 +43,7 @@ const dealDir = async (res) => {
 				layout: room + hall + bathroom,
 				amount,
 				phone,
-				// url,
+				url,
 			})
 			resolve(1)
 		})
