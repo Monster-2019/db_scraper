@@ -21,19 +21,22 @@ const dealDir = async (res) => {
 				new Set(content.match(/\b[\u4e00-\u9fa5]+小区\b/g))
 			)
 			const room = Array.from(
-				new Set(content.match(/(1|2|3|一|二|三)(室|房)/g))
+				new Set(content.match(/(一|二|两|三)(室|房)/g))
 			)
 			const hall = Array.from(
-				new Set(content.match(/(1|2|3|一|二|三)厅/g))
+				new Set(content.match(/(一|二|两|三)厅/g))
 			)
 			const bathroom = Array.from(
-				new Set(content.match(/(1|2|3|一|二|三)卫/g))
+				new Set(content.match(/(一|二|两|三)卫/g))
 			)
+			const sex = Array.from(new Set(content.match(/限(男|女)/g)))
 			const amount = Array.from(
 				new Set(content.match(/\b\d{4}(元|\/月)?\b/g))
 			).filter((item) => item !== time.slice(0, 4))
 			const phone = Array.from(new Set(content.match(/\b1\d{10}\b/g)))
-			const url = Array.from(new Set($.html().match(/https:\/\/www.douban.com\/group\/topic\/\d{9}/)))[0]
+			const url = Array.from(new Set($.html().match(/https:\/\/www.douban.com\/group\/topic\/\d{9}/g)))[0]
+			const type = Array.from(new Set(content.match(/(合|整)租/g)))
+			const mode = Array.from(new Set(content.match(/押(1|2|3|一|二|两|三)付(1|2|3|一|二|两|三)/g)))
 
 			result.push({
 				time,
@@ -41,6 +44,9 @@ const dealDir = async (res) => {
 				subWay,
 				community,
 				layout: room + hall + bathroom,
+				sex,
+				type,
+				mode,
 				amount,
 				phone,
 				url,

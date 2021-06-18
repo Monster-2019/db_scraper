@@ -72,7 +72,7 @@ const crawlTopic = async (urlList) => {
     const html = await response.text()
 
     // let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
-    let s = Math.round(Math.random() * (2 - 1)) + 1
+    let s = Math.round(Math.random() * (3 - 1)) + 1 
 
     list.push(html)
 
@@ -103,7 +103,7 @@ const crawl = async (url, start) => {
   })
   if (!response.ok) return 0
   const html = await response.text()
-  let s = Math.round(Math.random() * (2 - 1)) + 1
+  let s = Math.round(Math.random() * (3 - 1)) + 1 
   console.log(`${api + start}完成，等待${s}秒后继续`)
 
   let isEnd = getTopicLink(html)
