@@ -11,7 +11,7 @@ const dealDir = async (res) => {
 		await new Promise(async (resolve) => {
 			const $ = cheerio.load(html)
 			const title = $('h1').text().replace(/\s/, '') // 帖子标题
-			const time = $('.create-time').text() // 帖子创建时间
+			const time = moment($('.create-time').text()).format('x') // 帖子创建时间
 			const content = $('.topic-doc').text() // 帖子主要内容
 			const route = Array.from(new Set(content.match(/(1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20)号线/g))) //地铁线
 			// 浦东国际机场|海天三路|远东大道|凌空路|川沙|华夏东路|创新中路|唐镇|广兰路|金科路|张江高科|龙阳路|世纪公园|上海科技馆|世纪大道|东昌路|陆家嘴|南京东路|人民广场|南京西路|静安寺|江苏路|中山公园|娄山关路|威宁路|北新泾|淞虹路|虹桥2号航站楼|虹桥火车站|徐泾东 2号线

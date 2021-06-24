@@ -31,13 +31,6 @@ const options = {
 }
 
 const baseUrl = "https://www.douban.com/group/search?"
-// const groupNo = [
-//   338839, // 上海租房@长宁租房
-//   196844, // 上海租房@长宁租房/徐汇/静安租房
-//   467799, // 上海租房@房东直租
-//   146409 // 上海租房
-// ]
-// const keywords = ["2号线", "中山公园", "江苏路"]
 
 let topicList = []
 // let proxyList = []
