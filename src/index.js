@@ -25,11 +25,11 @@ const start = async () => {
 	console.timeEnd('执行时间')
 }
 
-start()
+// start()
 
-// schedule.scheduleJob('0 10 * * * *', () => {
-// 	start()
-// })
+schedule.scheduleJob('0 1 0 * * *', () => {
+	start()
+})
 
 // const clearDir = async () => {
 // 	fs.readdirSync('topic').map((file) => {
