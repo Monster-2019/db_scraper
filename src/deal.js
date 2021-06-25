@@ -2,6 +2,7 @@ const fs = require('fs')
 const cheerio = require('cheerio')
 const moment = require('moment')
 const topicModel = require('./models/topic')
+const fetch = require('node-fetch')
 
 const result = []
 
@@ -61,39 +62,26 @@ const dealDir = async (res) => {
 				url,
 			}
 
-			await topicModel.findOne({ url }, async function (err, topic) {
-				if (topic === null) {
-					await topicModel.create(params)
-						.then(res => {
-							console.log(`文章${url}添加成功`)
-						})
-						.catch(err => {
-							console.log(`文章${url}添加失败，失败原因${err}`)
-						})
-				} else {
-					console.log(`文章${url}已存在`)
-				}
+			await fetch('https://dongxin.cool/api/topic', {
+				method: 'post',
+				body: JSON.stringify(params),
+				headers: { 'Content-Type': 'application/json' }
 			})
+				.then(res => res.json())
+				.then(res => {
+					if (res.code === 1) {
+						console.log(`文章${url}添加成功`)
+					} else {
+						console.log(res.msg)
+					}
+				})
 
 			// result.push(params)
 			resolve(1)
 		})
 	}
-	// let curDate = moment().format('YYYY-MM-DD')
-	// fs.unlink(`${curDate}.json`, (err) => {
-	// 	if (err) {
-	// 		console.log(err)
-	// 	}
-	// })
-	// fs.writeFile(`${curDate}.json`, JSON.stringify(result), (err) => {
-	// 	if (err) return console.log('出现错误')
-	// 	console.log('数据处理完成')
-	// 	console.timeEnd('数据处理时间')
-	// 	// process.exit()
-	// })
 
 	return 0
 }
 
 module.exports = dealDir
-// dealDir()

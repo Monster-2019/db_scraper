@@ -6,6 +6,7 @@ const groupNo = [
 ]
 
 const keywords = ["2号线", "中山公园", "江苏路", "娄山关路"]
+// const keywords = ["2号线"]
 
 const userAgents = [
   'Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 70.0.3538.77 Safari / 537.36',
