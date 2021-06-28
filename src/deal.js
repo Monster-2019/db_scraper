@@ -54,7 +54,7 @@ const dealDir = async (res) => {
 				area: area[0] || '',
 				type: type[0] || '',
 				mode: mode[0] || '',
-				amount,
+				amount: amount.map(num => Number(num)).filter(num => num !== 2021),
 				phone: phone[0] || '',
 				url,
 			}
