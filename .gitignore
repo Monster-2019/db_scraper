@@ -2,6 +2,7 @@ node_modules/
 html/
 images/
 topic/
+logs/
 
 info.log
 

@@ -1,12 +1,12 @@
 const moment = require('moment')
 // const HttpsProxyAgent = require('https-proxy-agent')
-const fs = require('fs')
 const cheerio = require('cheerio')
 const fetch = require('node-fetch')
 const dealData = require('./deal')
 const { groupNo, keywords, getUserAgent } = require('../config')
+const logger = require('./logger')
 
-const cookie = 'll="108296"; bid=x9Ph-lhwpbY; push_noty_num=0; push_doumail_num=0; douban-fav-remind=1; _ga=GA1.2.632792398.1621586045; gr_user_id=8929f845-1b4b-4147-aca9-1d6bbca5dc1d; ct=y; dbcl2="238471146:VoHrDLUNdz0"; __utmv=30149280.23847; ck=0lcn; __utmc=30149280; __utmz=30149280.1622517596.15.10.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not provided); _pk_ref.100001.8cb4=["","",1622530377,"https://www.google.com/"]; _pk_ses.100001.8cb4=*; __utma=30149280.632792398.1621586045.1622527024.1622530377.18; __utmt=1; _pk_id.100001.8cb4=296170f7976dd179.1621586044.16.1622530910.1622527166.; __utmb=30149280.30.8.1622530883699'
+const cookie = 'll="108296"; bid=x9Ph-lhwpbY; push_noty_num=0; push_doumail_num=0; douban-fav-remind=1; _ga=GA1.2.632792398.1621586045; gr_user_id=8929f845-1b4b-4147-aca9-1d6bbca5dc1d; _pk_ref.100001.8cb4=%5B%22%22%2C%22%22%2C1624855616%2C%22https%3A%2F%2Fwww.google.com%2F%22%5D; _pk_ses.100001.8cb4=*; __utma=30149280.632792398.1621586045.1624588481.1624855617.42; __utmc=30149280; __utmz=30149280.1624855617.42.21.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmt=1; ap_v=0,6.0; dbcl2="205676588:eK520WwbE1o"; ck=4w7C; __utmv=30149280.20567; _pk_id.100001.8cb4=296170f7976dd179.1621586044.40.1624856201.1624588488.; __utmb=30149280.23.6.1624856201483'
 
 //构造请求头-ip
 function returnIp () {
@@ -87,6 +87,7 @@ const crawlTopic = async (urlList) => {
     })
     if (!response.ok) {
       console.log('请求频繁')
+      logger.error(`${response.statusText}`)
       return list
     }
     const html = await response.text()
@@ -129,6 +130,7 @@ const crawl = async (url, start = 0) => {
   })
   if (!response.ok) {
     console.log('请求频繁')
+    logger.error(`${response.statusText}`)
     return 0
   }
   const html = await response.text()
@@ -149,6 +151,7 @@ const crawl = async (url, start = 0) => {
 console.log(groupNo, keywords)
 
 const crawlList = async () => {
+  logger.info(`获取数据为:组号为${groupNo.join('、')}，关键字为${keywords.join('、')}`)
   for (let url of groupNo) {
     for (let key of keywords) {
       await crawl(spliceUrl(url, key))

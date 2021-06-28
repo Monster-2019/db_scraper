@@ -1,8 +1,9 @@
-const fs = require('fs')
 const mongoose = require('mongoose')
 const getProxyList = require('./proxyList')
 const schedule = require('node-schedule')
 const getTopic = require('./getTopic')
+const moment = require('moment')
+const logger = require('./logger')
 
 const url = 'mongodb://dbAdmin:dd123456@121.199.51.37:27017/douban'
 
@@ -23,8 +24,9 @@ const start = async () => {
 	// })
 }
 
-// start()
+start()
 
-schedule.scheduleJob('0 1 0 * * *', () => {
-	start()
-})
+// schedule.scheduleJob('0 1 0 * * *', () => {
+// 	logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+// 	start()
+// })

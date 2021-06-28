@@ -1,13 +1,12 @@
 const fs = require('fs')
 const cheerio = require('cheerio')
 const moment = require('moment')
-const topicModel = require('./models/topic')
 const fetch = require('node-fetch')
+const logger = require('./logger')
 
 const result = []
 
 const dealDir = async (res) => {
-	console.time('数据处理时间')
 	for (let html of res) {
 		await new Promise(async (resolve) => {
 			const $ = cheerio.load(html)
@@ -44,7 +43,6 @@ const dealDir = async (res) => {
 			const phone = Array.from(new Set(content.match(/\b1\d{10}\b/g)))
 			const url = Array.from(new Set($.html().match(/https:\/\/www.douban.com\/group\/topic\/\d{9}/g)))[0]
 
-			// topicModel.create
 			let params = {
 				title,
 				time,
@@ -75,11 +73,16 @@ const dealDir = async (res) => {
 						console.log(res.msg)
 					}
 				})
+				.catch(err => {
+					logger.error(err)
+				})
 
 			// result.push(params)
 			resolve(1)
 		})
 	}
+
+	logger.info(`共获取到${res.length}条数据，已处理`)
 
 	return 0
 }
