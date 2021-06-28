@@ -1,4 +1,3 @@
-const fs = require('fs')
 const cheerio = require('cheerio')
 const moment = require('moment')
 const fetch = require('node-fetch')
