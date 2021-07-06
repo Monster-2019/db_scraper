@@ -6,7 +6,7 @@ const dealData = require('./deal')
 const { groupNo, keywords, getUserAgent, returnIp } = require('../config')
 const logger = require('./logger')
 
-const cookie = 'll="108296"; bid=x9Ph-lhwpbY; push_noty_num=0; push_doumail_num=0; douban-fav-remind=1; _ga=GA1.2.632792398.1621586045; gr_user_id=8929f845-1b4b-4147-aca9-1d6bbca5dc1d; _pk_ref.100001.8cb4=%5B%22%22%2C%22%22%2C1624855616%2C%22https%3A%2F%2Fwww.google.com%2F%22%5D; _pk_ses.100001.8cb4=*; __utma=30149280.632792398.1621586045.1624588481.1624855617.42; __utmc=30149280; __utmz=30149280.1624855617.42.21.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmt=1; ap_v=0,6.0; dbcl2="205676588:eK520WwbE1o"; ck=4w7C; __utmv=30149280.20567; _pk_id.100001.8cb4=296170f7976dd179.1621586044.40.1624856201.1624588488.; __utmb=30149280.23.6.1624856201483'
+const cookie = process.env.COOKIE
 
 const options = {
   headers: {
@@ -55,6 +55,7 @@ const getTopicLink = (html) => {
   return end
 }
 
+// 获取文章
 const crawlTopic = async (urlList) => {
   const list = []
   for (let url of urlList) {
@@ -80,7 +81,7 @@ const crawlTopic = async (urlList) => {
     const html = await response.text()
 
     // let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
-    let s = Math.round(Math.random() * (3 - 1)) + 1
+    let s = Math.round(Math.random() * (4 - 2)) + 2
 
     list.push(html)
 
@@ -98,6 +99,7 @@ const crawlTopic = async (urlList) => {
   return list
 }
 
+// 获取文章列表
 const crawl = async (url, start = 0) => {
   let api = url + `&start=${start}`
   // curProxy = proxyList[proxyIndex++]
@@ -121,7 +123,7 @@ const crawl = async (url, start = 0) => {
     return 0
   }
   const html = await response.text()
-  let s = Math.round(Math.random() * (3 - 1)) + 1
+  let s = Math.round(Math.random() * (4 - 2)) + 2
   console.log(`${api}完成，等待${s}秒后继续`)
 
   let isEnd = getTopicLink(html)
@@ -142,7 +144,7 @@ const crawlList = async () => {
   for (let url of groupNo) {
     for (let key of keywords) {
       await crawl(spliceUrl(url, key))
-      let s = Math.round(Math.random() * (3 - 1)) + 1
+      let s = Math.round(Math.random() * (4 - 2)) + 2
       await new Promise((r) => setTimeout(r, s * 1000))
     }
   }
