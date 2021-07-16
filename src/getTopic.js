@@ -81,7 +81,7 @@ const crawlTopic = async (urlList) => {
     const html = await response.text()
 
     // let fileName = 'topic' + url.match(/\d{9}/)[0] + '.html'
-    let s = Math.round(Math.random() * (4 - 2)) + 2
+    let s = Math.round(Math.random() * (5 - 3)) + 3
 
     list.push(html)
 
@@ -123,7 +123,7 @@ const crawl = async (url, start = 0) => {
     return 0
   }
   const html = await response.text()
-  let s = Math.round(Math.random() * (4 - 2)) + 2
+  let s = Math.round(Math.random() * (5 - 3)) + 3
   console.log(`${api}完成，等待${s}秒后继续`)
 
   let isEnd = getTopicLink(html)
@@ -144,7 +144,7 @@ const crawlList = async () => {
   for (let url of groupNo) {
     for (let key of keywords) {
       await crawl(spliceUrl(url, key))
-      let s = Math.round(Math.random() * (4 - 2)) + 2
+      let s = Math.round(Math.random() * (5 - 3)) + 3
       await new Promise((r) => setTimeout(r, s * 1000))
     }
   }
