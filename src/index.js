@@ -12,6 +12,7 @@ const start = async () => {
 	// })
 }
 
+console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 start()
 
@@ -21,6 +22,7 @@ rule.minute = 0;
 rule.second = 0;
 
 schedule.scheduleJob(rule, () => {
+	console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 	logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 	start()
 })

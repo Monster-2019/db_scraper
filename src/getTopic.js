@@ -75,8 +75,11 @@ const crawlTopic = async (urlList) => {
     })
     if (!response.ok) {
       console.log('请求频繁')
-      logger.error(`${response.statusText}`)
-      return list
+      urlList.push(url)
+      logger.error(`请求失败，错误：${response.statusText}`)
+      await new Promise((r) => setTimeout(r, 60 * 1000))
+      continue
+      // return list
     }
     const html = await response.text()
 
