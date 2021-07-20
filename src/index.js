@@ -12,10 +12,6 @@ const start = async () => {
 	// })
 }
 
-console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
-logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
-start()
-
 let rule = new schedule.RecurrenceRule();
 rule.hour = 6;
 rule.minute = 0;
@@ -26,3 +22,7 @@ schedule.scheduleJob(rule, () => {
 	logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 	start()
 })
+
+console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+start()
