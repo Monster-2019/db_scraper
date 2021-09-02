@@ -154,6 +154,9 @@ const crawlList = async () => {
   crawlTopic(topicList)
     .then(res => {
       dealData(res)
+        .then(res => {
+          logger.info(`脚本执行结束!!!`)
+        })
     })
 }
 

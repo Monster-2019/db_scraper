@@ -59,7 +59,7 @@ const dealDir = async (res) => {
 				url,
 			}
 
-			if (params.amount.length >= 5) return resolve()
+			if (params.amount.length >= 5) resolve()
 
 			await fetch('https://dongxin.cool/api/topic', {
 				method: 'post',
@@ -79,7 +79,7 @@ const dealDir = async (res) => {
 				})
 
 			// result.push(params)
-			return resolve()
+			resolve()
 		})
 	}
 
