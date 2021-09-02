@@ -18,11 +18,11 @@ rule.minute = 0;
 rule.second = 0;
 
 schedule.scheduleJob(rule, () => {
-	console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
-	logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+	console.log(`${moment().local().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+	logger.info(`${moment().local().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 	start()
 })
 
-console.log(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
-logger.info(`${moment().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+console.log(`${moment().local().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
+logger.info(`${moment().local().format('YYYY-MM-DD HH:mm:ss')}执行脚本`)
 start()
