@@ -3,9 +3,11 @@ const moment = require('moment')
 const fetch = require('node-fetch')
 const logger = require('./logger')
 
-const result = []
+let validDataCount = 0
+let invalidDataCount = 0
 
 const dealDir = async (res) => {
+	const len = res.length
 	for (let html of res) {
 		await new Promise(async (resolve) => {
 			const $ = cheerio.load(html)
@@ -59,7 +61,11 @@ const dealDir = async (res) => {
 				url,
 			}
 
-			if (params.amount.length >= 5) resolve()
+			if (params.amount.length >= 5) {
+				invalidDataCount++
+				resolve()
+				return 0
+			}
 
 			await fetch('https://dongxin.cool/api/topic', {
 				method: 'post',
@@ -69,21 +75,27 @@ const dealDir = async (res) => {
 				.then(res => res.json())
 				.then(res => {
 					if (res.code === 1) {
-						console.log(`文章${url}添加成功`)
+						// console.log(`文章${url}添加成功`)
+						validDataCount++
+						resolve()
+						return 0
 					} else {
-						console.log(res.msg)
+						// console.log(res.msg)
+						invalidDataCount++
+						resolve()
+						return 0
 					}
 				})
 				.catch(err => {
 					logger.error(err)
+					invalidDataCount++
+					resolve()
+					return 0
 				})
-
-			// result.push(params)
-			resolve()
 		})
 	}
 
-	logger.info(`共获取到${res.length}条数据，已处理`)
+	logger.info(`共获取到 ${len} 条数据，其中 ${validDataCount} 条有效数据， ${invalidDataCount} 条无效数据`)
 
 	return 0
 }

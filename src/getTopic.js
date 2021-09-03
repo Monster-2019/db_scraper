@@ -57,6 +57,8 @@ const getTopicLink = (html) => {
 
 // 获取文章
 const crawlTopic = async (urlList) => {
+  const len = urlList.length
+  logger.info(`共${len}条新数据`)
   const list = []
   for (let url of urlList) {
     // curProxy = proxyList[proxyIndex++]
@@ -74,7 +76,7 @@ const crawlTopic = async (urlList) => {
       // agent: proxyAgent
     })
     if (!response.ok) {
-      console.log('请求频繁')
+      // console.log('请求频繁')
       urlList.push(url)
       logger.error(`请求失败，错误：${response.statusText}`)
       await new Promise((r) => setTimeout(r, 60 * 1000))
@@ -91,7 +93,7 @@ const crawlTopic = async (urlList) => {
     // fs.writeFile(`topic/${fileName}`, html, function (err) {
     //   if (!err) {
     // console.log(`文件${fileName}获取成功!等待${s}秒后继续`)
-    console.log(`文章${url}完!等待${s}秒`)
+    // console.log(`文章${url}完!等待${s}秒`)
     //   } else {
     //     console.log(err)
     //   }
@@ -121,13 +123,13 @@ const crawl = async (url, start = 0) => {
     // agent: proxyAgent
   })
   if (!response.ok) {
-    console.log('请求频繁')
+    // console.log('请求频繁')
     logger.error(`${response.statusText}`)
     return 0
   }
   const html = await response.text()
   let s = Math.round(Math.random() * (5 - 3)) + 3
-  console.log(`${api}完成，等待${s}秒后继续`)
+  // console.log(`${api}完成，等待${s}秒后继续`)
 
   let isEnd = getTopicLink(html)
   if (!isEnd) {
