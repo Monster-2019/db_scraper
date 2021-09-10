@@ -5,7 +5,7 @@ const groupNo = [
   146409 // 上海租房
 ]
 
-const keywords = ["2号线", "中山公园", "江苏路", "娄山关路"]
+const keywords = ["2号线", "中山公园", "江苏路", "娄山关路", "天山SOHO"]
 // const keywords = ["2号线"]
 
 const userAgents = [

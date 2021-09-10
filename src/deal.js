@@ -5,6 +5,7 @@ const logger = require('./logger')
 
 let validDataCount = 0
 let invalidDataCount = 0
+let repeatDataCount = 0
 
 const dealDir = async (res) => {
 	const len = res.length
@@ -81,7 +82,7 @@ const dealDir = async (res) => {
 						return 0
 					} else {
 						// console.log(res.msg)
-						invalidDataCount++
+						repeatDataCount++
 						resolve()
 						return 0
 					}
@@ -95,7 +96,7 @@ const dealDir = async (res) => {
 		})
 	}
 
-	logger.info(`共获取到 ${len} 条数据，其中 ${validDataCount} 条有效数据， ${invalidDataCount} 条无效数据`)
+	logger.info(`共获取到 ${len} 条数，其中 ${validDataCount} 条有效数据， ${invalidDataCount} 条无效数据， ${repeatDataCount} 条重复数据`)
 
 	return 0
 }
