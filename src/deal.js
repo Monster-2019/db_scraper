@@ -3,11 +3,13 @@ const moment = require('moment')
 const fetch = require('node-fetch')
 const logger = require('./logger')
 
-let validDataCount = 0
-let invalidDataCount = 0
+let successDataCount = 0
+let failDataCount = 0
 let repeatDataCount = 0
+let rubbishDataCount = 0
 
 const dealDir = async (res) => {
+	let invalidList = []
 	const len = res.length
 	for (let html of res) {
 		await new Promise(async (resolve) => {
@@ -63,7 +65,7 @@ const dealDir = async (res) => {
 			}
 
 			if (params.amount.length >= 5) {
-				invalidDataCount++
+				rubbishDataCount++
 				resolve()
 				return 0
 			}
@@ -77,7 +79,7 @@ const dealDir = async (res) => {
 				.then(res => {
 					if (res.code === 1) {
 						// console.log(`文章${url}添加成功`)
-						validDataCount++
+						successDataCount++
 						resolve()
 						return 0
 					} else {
@@ -89,16 +91,21 @@ const dealDir = async (res) => {
 				})
 				.catch(err => {
 					logger.error(err)
-					invalidDataCount++
+					failDataCount++
+					invalidList.push(html)
 					resolve()
 					return 0
 				})
 		})
 	}
+	
+	if (invalidList.length) {
+		dealDir(invalidList)
+	} else {
+		logger.info(`共获取到 ${len} 条数，其中 ${successDataCount} 条成功数据，${repeatDataCount} 条重复数据， ${rubbishDataCount} 条垃圾数据，${failDataCount} 条失败数据，`)
 
-	logger.info(`共获取到 ${len} 条数，其中 ${validDataCount} 条有效数据， ${invalidDataCount} 条无效数据， ${repeatDataCount} 条重复数据`)
-
-	return 0
+		return 0
+	}
 }
 
 module.exports = dealDir
