@@ -3,13 +3,8 @@ const getTopic = require('./getTopic')
 const logger = require('./logger')
 const moment = require('moment')
 
-const start = async () => {
-	// await getProxyList()
-	// .then(res => {
-	// proxyList = res
-	// await clearDir()
-	await getTopic()
-	// })
+const start = () => {
+	getTopic()
 }
 
 let rule = new schedule.RecurrenceRule();
