@@ -7,7 +7,7 @@
     "index": "node src/subway.js",
     "test": "node src/proxyList.js",
     "deal": "node src/deal.js",
-    "start": "node src/index.js"
+    "start": "node index.js"
   },
   "author": "dongxin",
   "license": "ISC",

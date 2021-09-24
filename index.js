@@ -1,6 +1,6 @@
 const schedule = require('node-schedule')
-const getTopic = require('./getTopic')
-const logger = require('./logger')
+const getTopic = require('./src/getTopic')
+const logger = require('./src/logger')
 const moment = require('moment')
 
 const start = () => {

@@ -6,10 +6,12 @@ const groupNo = [
   146409, // 上海租房
   383972, // 上海租房
   190720, // 上海租房
-
 ]
 
-const keywords = ["2号线", "中山公园", "江苏路", "娄山关路", "天山SOHO", "北新泾", '淞虹路']
+const cookie = process.env.COOKIE
+
+
+const keywords = ["2号线", "二号线", "中山公园", "江苏路", "娄山关路", "天山SOHO", "北新泾", '淞虹路']
 // const keywords = ["2号线"]
 
 const userAgents = [
@@ -56,9 +58,22 @@ const returnIp = () => {
   )
 }
 
+const sleep = async (min, max) => {
+  await new Promise((r) => setTimeout(r, (Math.round(Math.random() * (max - min)) + min) * 1000))
+}
+
+const getHeader = () => {
+  return {
+    'User-Agent': getUserAgent(),
+    Referer: 'https://www.douban.com',
+    "X-Forwarded-For": returnIp(),
+    Cookie: cookie,
+  }
+}
+
 module.exports = {
   groupNo,
   keywords,
-  getUserAgent,
-  returnIp
+  getHeader,
+  sleep
 }
