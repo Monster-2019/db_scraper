@@ -11,8 +11,8 @@ const groupNo = [
 const cookie = process.env.COOKIE
 
 
-const keywords = ["2号线", "二号线", "中山公园", "江苏路", "娄山关路", "天山SOHO", "北新泾", '淞虹路']
-// const keywords = ["2号线"]
+const keywords = ["江苏路", "中山公园", "娄山关路", "威宁路", "北新泾", '淞虹路']
+// const keywords = ["2号线", "二号线"]
 
 const userAgents = [
   'Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 70.0.3538.77 Safari / 537.36',
