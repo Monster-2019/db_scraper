@@ -11,18 +11,18 @@ let topicList = []
 const spliceUrl = (groupNo, keyword) => {
   return baseUrl + `cat=1013&sort=time&group=${groupNo}&q=${keyword}`
 }
+// https://www.douban.com/group/search?cat=1013&sort=time&group=146409&q=淞虹路
+
+const REGEXP = /^(今天|昨天)|前$/
 
 const getTopicLink = (html) => {
   let end = false
   const $ = cheerio.load(html)
   const topic = $('td[class=td-time] span', '.olt')
     .filter((i, el) => {
-      let today = $(el).text().match(/^(今天|昨天)|前$/)
-      if (today) {
-        if (today[0] === '昨天') return true
-      } else {
-        if (!today) end = true
-      }
+      let today = REGEXP.test($(el).text())
+      if (today) return true
+      else end = true
       return false
     })
     .map((i, el) => {

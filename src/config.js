@@ -11,7 +11,7 @@ const groupNo = [
 const cookie = process.env.COOKIE
 
 
-const keywords = ["江苏路", "中山公园", "娄山关路", "威宁路", "北新泾", '淞虹路']
+const keywords = ["江苏路", "中山公园", "娄山关路"]
 // const keywords = ["2号线", "二号线"]
 
 const userAgents = [
