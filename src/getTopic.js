@@ -3,6 +3,7 @@ const fetch = require('node-fetch')
 const dealData = require('./deal')
 const { groupNo, keywords, sleep, getHeader } = require('./config')
 const logger = require('./logger')
+const cliProgress = require('cli-progress');
 
 const baseUrl = "https://www.douban.com/group/search?"
 
@@ -40,7 +41,18 @@ const getTopicLink = (html) => {
 // 获取文章
 const crawlTopic = async (urlList) => {
   const len = urlList.length
+  let count = 0
   logger.info(`共${len}条新数据`)
+
+  const b1 = new cliProgress.SingleBar({
+    format: 'Progress |' + '{bar}' + '| {percentage}% || {value}/{total}',
+    barCompleteChar: '\u2588',
+    barIncompleteChar: '\u2591',
+    hideCursor: true
+  });
+
+  b1.start(len, count);
+
   const list = []
   for (let url of urlList) {
     const response = await fetch(url, {
@@ -58,7 +70,11 @@ const crawlTopic = async (urlList) => {
     const html = await response.text()
     list.push(html)
 
-    await sleep(4, 6)
+    count++
+    b1.increment();
+    b1.update(count);
+
+    await sleep(2, 4)
   }
   return list
 }
@@ -81,7 +97,7 @@ const crawl = async (url, start = 0) => {
 
   if (!isEnd) {
     start += 50
-    await sleep(4, 6)
+    await sleep(2, 4)
     await crawl(url, start)
   } else {
     return 0
@@ -93,7 +109,7 @@ const crawlList = async () => {
   for (let url of groupNo) {
     for (let key of keywords) {
       await crawl(spliceUrl(url, key))
-      await sleep(4, 6)
+      await sleep(2, 4)
     }
   }
   crawlTopic(topicList)
