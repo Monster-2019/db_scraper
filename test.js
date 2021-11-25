@@ -5,7 +5,8 @@ const b1 = new cliProgress.SingleBar({
     format: 'Progress |' + '{bar}' + '| {percentage}% || {value}/{total}',
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
-    hideCursor: true
+    hideCursor: true,
+    stopOnComplete: true
 });
 
 // initialize the bar - defining payload token "speed" with the default value "N/A"

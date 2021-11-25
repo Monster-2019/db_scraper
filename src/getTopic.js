@@ -48,7 +48,8 @@ const crawlTopic = async (urlList) => {
     format: 'Progress |' + '{bar}' + '| {percentage}% || {value}/{total}',
     barCompleteChar: '\u2588',
     barIncompleteChar: '\u2591',
-    hideCursor: true
+    hideCursor: true,
+    stopOnComplete: true
   });
 
   b1.start(len, count);
