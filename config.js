@@ -39,22 +39,8 @@ const getUserAgent = () => {
   return userAgents[Math.floor(Math.random() * (0 - userAgents.length) + userAgents.length)]
 }
 
-//构造请求头-ip
-const returnIp = () => {
-  return (
-    Math.floor(Math.random() * (10 - 255) + 255) +
-    "." +
-    Math.floor(Math.random() * (10 - 255) + 255) +
-    "." +
-    Math.floor(Math.random() * (10 - 255) + 255) +
-    "." +
-    Math.floor(Math.random() * (10 - 255) + 255)
-  )
-}
-
-module.exports = {
+export {
   groupNo,
   keywords,
-  getUserAgent,
-  returnIp
+  getUserAgent
 }

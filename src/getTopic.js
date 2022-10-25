@@ -24,6 +24,10 @@ let topicList = []
 // let proxyIndex = 0
 // let curProxy = {}
 
+// https://www.douban.com/group/search?cat=1013&group=699518&sort=time&q=12312311
+
+// https://www.douban.com/group/search?group=523353&cat=1013&q=11
+
 const spliceUrl = (groupNo, keyword) => {
   return baseUrl + `cat=1013&sort=time&group=${groupNo}&q=${keyword}`
 }
