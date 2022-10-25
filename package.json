@@ -4,12 +4,14 @@
     "cheerio": "^1.0.0-rc.12"
   },
   "scripts": {
-    "start": "node server.js"
+    "dev": "nodemon server.js"
   },
   "name": "db_scraper",
   "version": "1.0.0",
   "main": "config.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
   "type": "module",
   "repository": {
     "type": "git",
