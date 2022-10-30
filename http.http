@@ -1,1 +1,5 @@
-GET http://localhost:5010/get HTTP/1.1
+GET https://db-api.dongxin.cool/v1/topic HTTP/1.1
+
+###
+
+DELETE https://db-api.dongxin.cool/v1/topic/635e67130fe07f4930bd4f29 HTTP/1.1

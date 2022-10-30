@@ -2,11 +2,14 @@ const groupNo = [
   338839, // 上海租房@长宁租房
   196844, // 上海租房@长宁租房/徐汇/静安租房
   467799, // 上海租房@房东直租
-  146409 // 上海租房
+  146409, // 上海租房
+  383972, // 上海租房
+  190720,
+  557646
 ]
 
-const keywords = ["2号线", "中山公园", "江苏路", "娄山关路", "天山SOHO"]
-// const keywords = ["2号线"]
+const keywords = ["娄山关路", "中山公园", "江苏路", "静安寺", "临平路"]
+// const keywords = ["娄山关路"]
 
 const userAgents = [
   'Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 70.0.3538.77 Safari / 537.36',
