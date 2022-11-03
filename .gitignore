@@ -1,10 +1,4 @@
-node_modules/
-html/
-images/
-topic/
-logs/
-
-info.log
-
 .vscode
 .env
+__pycache__
+*.http

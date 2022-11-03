@@ -1,11 +1,19 @@
-FROM node:lts-alpine as builder
+FROM ubuntu as build
 
-RUN mkdir -p /app
+RUN apt-get update -y
+RUN apt-get install -y python3-pip
+
 WORKDIR /app
 
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+RUN pip install pyinstaller
+
 COPY . .
-RUN npm install
 
-CMD npm start
+RUN pyinstaller -F run.py
 
-EXPOSE 8001
+WORKDIR /app/dist
+
+CMD ./run

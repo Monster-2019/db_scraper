@@ -1,0 +1,4 @@
+APScheduler==3.9.1
+beautifulsoup4==4.11.1
+environs==9.5.0
+requests==2.26.0
