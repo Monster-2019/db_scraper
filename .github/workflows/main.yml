@@ -57,9 +57,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          username: root
+          key: ${{ secrets.DEPLOY_KEY }}
           script: |
             docker stop db_scraper
             docker pull registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
