@@ -5,8 +5,8 @@ from config import keywords
 from apscheduler.schedulers.blocking import BlockingScheduler
 import requests
 import re
-import json
 import random
+import json
 
 env = Env()
 env.read_env()
@@ -50,18 +50,19 @@ def parserHtml(html):
         time = tr.find(attrs={'class': 'td-time'}).string
         res = re.search(pattern, title, flags=0)
         if (time.find('今天') > -1 or time.find('前') > -1) and res:
-            # if (time.find('昨天') > -1) and res:
+        # if (time.find('昨天') > -1) and res:
             list.append(href)
     getTopic(list)
 
 
 def getTopic(list):
+    success = 0
+    fail = 0
     for url in list:
         response = requests.get(url, cookies=getCookie(), headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
         data = soup.select('script[type="application/ld+json"]')[0].get_text()
         data = json.loads(data.replace('\r\n', ''))
-        print(data['name'])
         params = {
             'title': data['name'],
             'content': data['text'],
@@ -69,12 +70,17 @@ def getTopic(list):
             'date': data['dateCreated'].replace('T', ' ')
         }
         res = requests.post(API_ADD, json=params)
-        print(res.status_code)
+        resJons = res.json()
+        if resJons['code']:
+            success += 1
+        else:
+            fail += 1
         sleep(random.randint(1, 3))
     params = {
         "token": env('PUSH_TOKEN'),
         "title": "豆瓣脚本提醒",
-        "content": f'{strftime("%Y-%m-%d", localtime())} 新增 {len(list)} 条数据',
+        "content":
+        f'{strftime("%Y-%m-%d", localtime())} 新增 {len(list)} 条数据，成功{success}条，重复{fail}条',
         "template": "text"
     }
     res = requests.post(API_PUSH, json=params)
