@@ -62,7 +62,7 @@ def getTopic(list):
         response = requests.get(url, cookies=getCookie(), headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
         data = soup.select('script[type="application/ld+json"]')[0].get_text()
-        data = json.loads(data.replace('\r\n', ''))
+        data = json.loads(data, strict=False)
         params = {
             'title': data['name'],
             'content': data['text'],
