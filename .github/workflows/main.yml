@@ -57,11 +57,11 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: root
+          username: ubuntu
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            docker stop db_scraper
-            docker pull registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
-            docker create --rm -p 8001:8001 --name db_scraper -e TZ=Asia/Shanghai -v /etc/timezone:/etc/timezone -v /etc/localtime:/etc/localtime registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
-            docker cp /var/local/db_scraper/.env db_scraper:/app/.env
-            docker start db_scraper
+            sudo docker stop db_scraper
+            sudo docker pull registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
+            sudo docker create --rm -p 8001:8001 --name db_scraper -e TZ=Asia/Shanghai -v /etc/timezone:/etc/timezone -v /etc/localtime:/etc/localtime registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
+            sudo docker cp /opt/env/db_scraper.env db_scraper:/app/.env
+            sudo docker start db_scraper
