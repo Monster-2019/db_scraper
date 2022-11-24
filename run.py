@@ -13,8 +13,8 @@ env.read_env()
 
 group_url = 'https://www.douban.com/group/'
 
-API_ADD = 'https://db-api.dongxin.cool/v1/topic'
-API_PUSH = 'https://push.dongxin.cool/v1/message/send'
+API_ADD = 'https://db-api.dongxin.co/v1/topic'
+API_PUSH = 'https://push.dongxin.co/v1/message/send'
 
 headers = {
     "user-agent":
@@ -50,8 +50,9 @@ def parserHtml(html):
         time = tr.find(attrs={'class': 'td-time'}).string
         res = re.search(pattern, title, flags=0)
         if (time.find('今天') > -1 or time.find('前') > -1) and res:
-        # if (time.find('昨天') > -1) and res:
+            # if (time.find('昨天') > -1) and res:
             list.append(href)
+    print(list)
     getTopic(list)
 
 
@@ -59,10 +60,12 @@ def getTopic(list):
     success = 0
     fail = 0
     for url in list:
+        if url == 'https://www.douban.com/group/topic/278766995/':
+            continue
         response = requests.get(url, cookies=getCookie(), headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
         data = soup.select('script[type="application/ld+json"]')[0].get_text()
-        data = json.loads(data, strict=False)
+        data = json.loads("".join(data), strict=False)
         params = {
             'title': data['name'],
             'content': data['text'],
