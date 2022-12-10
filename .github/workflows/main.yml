@@ -43,7 +43,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
+          tags: registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:latest
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
@@ -60,8 +60,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            sudo docker stop db_scraper
-            sudo docker pull registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
-            sudo docker create --rm -p 8001:8001 --name db_scraper -e TZ=Asia/Shanghai -v /etc/timezone:/etc/timezone -v /etc/localtime:/etc/localtime registry.cn-hangzhou.aliyuncs.com/dongxin/db_scraper:main
-            sudo docker cp /opt/env/db_scraper.env db_scraper:/app/.env
-            sudo docker start db_scraper
+            sudo docker compose -f /opt/compose/db_scraper/docker-compose.yml pull db_scraper
+            sudo docker compose -f /opt/compose/db_scraper/docker-compose.yml up -d --build db_scraper
