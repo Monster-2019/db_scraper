@@ -36,6 +36,17 @@ def getCookie():
 
 def task():
     response = requests.get(group_url, cookies=getCookie(), headers=headers)
+    if response.url != group_url:
+        params = {
+            "token": env('PUSH_TOKEN'),
+            "title": "豆瓣脚本Token失效",
+            "content":
+            f'豆瓣脚本Token失效请替换token',
+            "template": "text"
+        }
+        res = requests.post(API_PUSH, json=params)
+        print(res.json())
+        return 0
     parserHtml(response.content)
 
 
