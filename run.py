@@ -40,8 +40,7 @@ def task():
         params = {
             "token": env('PUSH_TOKEN'),
             "title": "豆瓣脚本Token失效",
-            "content":
-            f'豆瓣脚本Token失效请替换token',
+            "content": f'豆瓣脚本Token失效请替换token',
             "template": "text"
         }
         res = requests.post(API_PUSH, json=params)
@@ -59,8 +58,10 @@ def parserHtml(html):
         title = tr.a['title']
         href = tr.a['href']
         time = tr.find(attrs={'class': 'td-time'}).string
-        res = re.search(pattern, title, flags=0)
-        if (time.find('今天') > -1 or time.find('前') > -1) and res:
+        groupName = tr.find(attrs={'class': 'td-group'}).string
+        isHZ = re.search('杭州', groupName)
+        res = re.search(pattern, title)
+        if re.search(r'(今天)|(前)', time) and (res or isHZ):
             # if (time.find('昨天') > -1) and res:
             list.append(href)
     print(list)
@@ -77,9 +78,11 @@ def getTopic(list):
         soup = BeautifulSoup(response.content, 'html.parser')
         data = soup.select('script[type="application/ld+json"]')[0].get_text()
         data = json.loads("".join(data), strict=False)
+        group = soup.select_one('.group-item .title a').get_text()
         params = {
             'title': data['name'],
             'content': data['text'],
+            'group': re.search(r'上海|杭州', group)[0],
             'url': data['url'],
             'date': data['dateCreated'].replace('T', ' ')
         }
