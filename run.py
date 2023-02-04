@@ -82,7 +82,7 @@ def getTopic(list):
         params = {
             'title': data['name'],
             'content': data['text'],
-            'group': re.search(r'上海|杭州', group)[0],
+            'city': re.search(r'上海|杭州', group)[0],
             'url': data['url'],
             'date': data['dateCreated'].replace('T', ' ')
         }
